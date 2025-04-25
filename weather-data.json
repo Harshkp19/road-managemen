@@ -1,0 +1,38 @@
+{
+  "london": {
+    "coord": { "lat": 51.5074, "lon": -0.1278 },
+    "weather": [
+      {
+        "id": 500,
+        "main": "Rain",
+        "description": "light rain",
+        "icon": "10d"
+      }
+    ],
+    "main": {
+      "temp": 15.2,
+      "feels_like": 14.8,
+      "temp_min": 14.0,
+      "temp_max": 16.5,
+      "pressure": 1012,
+      "humidity": 76
+    },
+    "wind": {
+      "speed": 3.6,
+      "deg": 220
+    },
+    "rain": {
+      "1h": 0.5
+    },
+    "clouds": {
+      "all": 75
+    },
+    "dt": 1671098400,
+    "sys": {
+      "country": "GB",
+      "sunrise": 1671086400,
+      "sunset": 1671116400
+    },
+    "name": "London"
+  }
+}

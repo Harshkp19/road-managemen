@@ -1,0 +1,63 @@
+{
+  "j001": {
+    "before": {
+      "laneWidth": 3.2,
+      "speedLimit": 30,
+      "signalTiming": 60,
+      "lanes": 2,
+      "averageTraffic": 850,
+      "averageDelay": 42.5,
+      "throughput": 720,
+      "trafficFlowData": [
+        { "time": "2023-12-15T06:00:00", "traffic": 450, "before": 400 },
+        { "time": "2023-12-15T07:00:00", "traffic": 650, "before": 500 },
+        { "time": "2023-12-15T08:00:00", "traffic": 850, "before": 600 },
+        { "time": "2023-12-15T09:00:00", "traffic": 800, "before": 550 },
+        { "time": "2023-12-15T10:00:00", "traffic": 700, "before": 500 },
+        { "time": "2023-12-15T11:00:00", "traffic": 650, "before": 450 },
+        { "time": "2023-12-15T12:00:00", "traffic": 700, "before": 500 },
+        { "time": "2023-12-15T13:00:00", "traffic": 750, "before": 550 },
+        { "time": "2023-12-15T14:00:00", "traffic": 700, "before": 500 },
+        { "time": "2023-12-15T15:00:00", "traffic": 750, "before": 550 },
+        { "time": "2023-12-15T16:00:00", "traffic": 850, "before": 600 },
+        { "time": "2023-12-15T17:00:00", "traffic": 900, "before": 650 },
+        { "time": "2023-12-15T18:00:00", "traffic": 850, "before": 600 },
+        { "time": "2023-12-15T19:00:00", "traffic": 700, "before": 500 },
+        { "time": "2023-12-15T20:00:00", "traffic": 550, "before": 400 },
+        { "time": "2023-12-15T21:00:00", "traffic": 450, "before": 350 },
+        { "time": "2023-12-15T22:00:00", "traffic": 350, "before": 300 },
+        { "time": "2023-12-15T23:00:00", "traffic": 250, "before": 200 }
+      ]
+    },
+    "after": {
+      "laneWidth": 3.0,
+      "speedLimit": 30,
+      "signalTiming": 45,
+      "lanes": 3,
+      "averageTraffic": 680,
+      "averageDelay": 24.6,
+      "throughput": 920,
+      "trafficFlowData": [
+        { "time": "2023-12-15T06:00:00", "traffic": 360, "before": 400 },
+        { "time": "2023-12-15T07:00:00", "traffic": 520, "before": 500 },
+        { "time": "2023-12-15T08:00:00", "traffic": 680, "before": 600 },
+        { "time": "2023-12-15T09:00:00", "traffic": 640, "before": 550 },
+        { "time": "2023-12-15T10:00:00", "traffic": 560, "before": 500 },
+        { "time": "2023-12-15T11:00:00", "traffic": 520, "before": 450 },
+        { "time": "2023-12-15T12:00:00", "traffic": 560, "before": 500 },
+        { "time": "2023-12-15T13:00:00", "traffic": 600, "before": 550 },
+        { "time": "2023-12-15T14:00:00", "traffic": 560, "before": 500 },
+        { "time": "2023-12-15T15:00:00", "traffic": 600, "before": 550 },
+        { "time": "2023-12-15T16:00:00", "traffic": 680, "before": 600 },
+        { "time": "2023-12-15T17:00:00", "traffic": 720, "before": 650 },
+        { "time": "2023-12-15T18:00:00", "traffic": 680, "before": 600 },
+        { "time": "2023-12-15T19:00:00", "traffic": 560, "before": 500 },
+        { "time": "2023-12-15T20:00:00", "traffic\": 440  \"traffic": 560, "before": 500 },
+        { "time": "2023-12-15T20:00:00", "traffic": 440, "before": 400 },
+        { "time": "2023-12-15T21:00:00", "traffic": 360, "before": 350 },
+        { "time": "2023-12-15T22:00:00", "traffic": 280, "before": 300 },
+        { "time": "2023-12-15T23:00:00", "traffic": 200, "before": 200 }
+      ]
+    }
+  }
+}

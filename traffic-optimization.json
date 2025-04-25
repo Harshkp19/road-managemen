@@ -1,0 +1,73 @@
+{
+  "recommendations": [
+    {
+      "junctionId": "j001",
+      "currentConfig": {
+        "laneWidth": 3.2,
+        "speedLimit": 30,
+        "signalTiming": 60,
+        "lanes": 2
+      },
+      "recommendedConfig": {
+        "laneWidth": 3.0,
+        "speedLimit": 30,
+        "signalTiming": 45,
+        "lanes": 3
+      },
+      "expectedImprovements": {
+        "trafficReduction": 20,
+        "delayReduction": 42,
+        "throughputIncrease": 28
+      },
+      "priority": "high",
+      "costEstimate": 250000,
+      "implementationTimeEstimate": "3 months"
+    },
+    {
+      "junctionId": "j002",
+      "currentConfig": {
+        "laneWidth": 3.0,
+        "speedLimit": 30,
+        "signalTiming": 55,
+        "lanes": 2
+      },
+      "recommendedConfig": {
+        "laneWidth": 3.0,
+        "speedLimit": 30,
+        "signalTiming": 40,
+        "lanes": 2
+      },
+      "expectedImprovements": {
+        "trafficReduction": 15,
+        "delayReduction": 35,
+        "throughputIncrease": 20
+      },
+      "priority": "medium",
+      "costEstimate": 80000,
+      "implementationTimeEstimate": "1 month"
+    },
+    {
+      "junctionId": "j003",
+      "currentConfig": {
+        "laneWidth": 3.5,
+        "speedLimit": 30,
+        "signalTiming": 65,
+        "lanes": 3
+      },
+      "recommendedConfig": {
+        "laneWidth": 3.2,
+        "speedLimit": 30,
+        "signalTiming": 50,
+        "lanes": 3
+      },
+      "expectedImprovements": {
+        "trafficReduction": 10,
+        "delayReduction": 25,
+        "throughputIncrease": 15
+      },
+      "priority": "low",
+      "costEstimate": 50000,
+      "implementationTimeEstimate": "2 weeks"
+    }
+  ]
+}

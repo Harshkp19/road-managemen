@@ -1,0 +1,52 @@
+[
+  {
+    "id": "i001",
+    "junctionId": "j001",
+    "type": "accident",
+    "severity": "medium",
+    "timestamp": "2023-12-15T08:45:00",
+    "description": "Two-vehicle collision at intersection",
+    "duration": 45,
+    "impactRadius": 200
+  },
+  {
+    "id": "i002",
+    "junctionId": "j002",
+    "type": "roadworks",
+    "severity": "high",
+    "timestamp": "2023-12-15T10:30:00",
+    "description": "Emergency water main repair",
+    "duration": 240,
+    "impactRadius": 150
+  },
+  {
+    "id": "i003",
+    "junctionId": "j001",
+    "type": "weather",
+    "severity": "low",
+    "timestamp": "2023-12-15T16:15:00",
+    "description": "Heavy rainfall reducing visibility",
+    "duration": 90,
+    "impactRadius": 500
+  },
+  {
+    "id": "i004",
+    "junctionId": "j003",
+    "type": "event",
+    "severity": "medium",
+    "timestamp": "2023-12-15T18:00:00",
+    "description": "Public demonstration affecting traffic flow",
+    "duration": 120,
+    "impactRadius": 300
+  },
+  {
+    "id": "i005",
+    "junctionId": "j004",
+    "type": "breakdown",
+    "severity": "low",
+    "timestamp": "2023-12-15T14:20:00",
+    "description": "Vehicle breakdown in right lane",
+    "duration": 35,
+    "impactRadius": 100
+  }
+]

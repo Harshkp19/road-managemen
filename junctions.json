@@ -1,0 +1,81 @@
+[
+  {
+    "id": "j001",
+    "name": "Oxford Circus",
+    "latitude": 51.5152,
+    "longitude": -0.1418,
+    "trafficLevel": "high",
+    "currentTrafficCount": 850,
+    "capacity": 900,
+    "trafficReasons": [
+      { "type": "volume", "description": "High pedestrian and vehicle volume" },
+      { "type": "weather", "description": "Light rain affecting visibility" }
+    ],
+    "laneWidth": 3.2,
+    "speedLimit": 30,
+    "signalTiming": 60,
+    "lanes": 2
+  },
+  {
+    "id": "j002",
+    "name": "Piccadilly Circus",
+    "latitude": 51.5099,
+    "longitude": -0.1337,
+    "trafficLevel": "high",
+    "currentTrafficCount": 780,
+    "capacity": 850,
+    "trafficReasons": [
+      { "type": "volume", "description": "Tourist congestion" },
+      { "type": "accident", "description": "Minor incident reported nearby" }
+    ],
+    "laneWidth": 3.0,
+    "speedLimit": 30,
+    "signalTiming": 55,
+    "lanes": 2
+  },
+  {
+    "id": "j003",
+    "name": "Trafalgar Square",
+    "latitude": 51.508,
+    "longitude": -0.1281,
+    "trafficLevel": "medium",
+    "currentTrafficCount": 650,
+    "capacity": 800,
+    "trafficReasons": [
+      { "type": "volume", "description": "Moderate traffic flow" },
+      { "type": "weather", "description": "Clear conditions" }
+    ],
+    "laneWidth": 3.5,
+    "speedLimit": 30,
+    "signalTiming": 65,
+    "lanes": 3
+  },
+  {
+    "id": "j004",
+    "name": "Marble Arch",
+    "latitude": 51.5131,
+    "longitude": -0.1589,
+    "trafficLevel": "medium",
+    "currentTrafficCount": 600,
+    "capacity": 800,
+    "trafficReasons": [{ "type": "volume", "description": "Regular commuter traffic" }],
+    "laneWidth": 3.3,
+    "speedLimit": 30,
+    "signalTiming": 60,
+    "lanes": 3
+  },
+  {
+    "id": "j005",
+    "name": "Hyde Park Corner",
+    "latitude": 51.5026,
+    "longitude": -0.1528,
+    "trafficLevel": "low",
+    "currentTrafficCount": 450,
+    "capacity": 750,
+    "trafficReasons": [{ "type": "volume", "description": "Light traffic flow" }],
+    "laneWidth": 3.5,
+    "speedLimit": 30,
+    "signalTiming": 50,
+    "lanes": 2
+  }
+]

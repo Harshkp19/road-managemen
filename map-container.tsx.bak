@@ -1,0 +1,291 @@
+"use client"
+
+import { useEffect, useState, useRef } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Search } from "lucide-react"
+import { useMobile } from "@/hooks/use-mobile"
+import type { Junction } from "@/types/junction"
+import { fetchJunctionsNearLocation } from "@/lib/api"
+
+declare global {
+  interface Window {
+    google: any
+  }
+}
+
+export function MapContainer() {
+  const mapRef = useRef<HTMLDivElement>(null)
+  const [map, setMap] = useState<google.maps.Map | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedJunction, setSelectedJunction] = useState<Junction | null>(null)
+  const [infoWindow, setInfoWindow] = useState<google.maps.InfoWindow | null>(null)
+  const [junctions, setJunctions] = useState<Junction[]>([])
+  const [loading, setLoading] = useState(false)
+  const isMobile = useMobile()
+  const popupRef = useRef<HTMLDivElement>(null)
+
+  // Initialize Google Maps
+  useEffect(() => {
+    const initMap = async () => {
+      if (!mapRef.current) return
+
+      // Load Google Maps script
+      const googleMapsScript = document.createElement("script")
+      googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBAno-WYdnkA0bpCqAKoCiqzjFLIgjAX-E&libraries=places`
+      googleMapsScript.async = true
+      googleMapsScript.defer = true
+      window.document.body.appendChild(googleMapsScript)
+
+      googleMapsScript.onload = () => {
+        const mapInstance = new window.google.maps.Map(mapRef.current!, {
+          center: { lat: 51.5074, lng: -0.1278 }, // London as default
+          zoom: 13,
+          styles: [
+            {
+              featureType: "poi",
+              elementType: "labels",
+              stylers: [{ visibility: "off" }],
+            },
+          ],
+        })
+
+        // Create info window for popups
+        const infoWindowInstance = new window.google.maps.InfoWindow({
+          maxWidth: 350,
+        })
+
+        setMap(mapInstance)
+        setInfoWindow(infoWindowInstance)
+      }
+    }
+
+    initMap()
+
+    return () => {
+      // Clean up
+      const script = document.querySelector('script[src*="maps.googleapis.com/maps/api"]')
+      if (script) {
+        script.remove()
+      }
+    }
+  }, [])
+
+  // Handle search
+  const handleSearch = async () => {
+    if (!map || !searchQuery) return
+
+    setLoading(true)
+
+    try {
+      const geocoder = new window.google.maps.Geocoder()
+
+      geocoder.geocode({ address: searchQuery }, async (results, status) => {
+        if (status === "OK" && results && results[0]) {
+          const location = results[0].geometry.location
+
+          map.setCenter(location)
+          map.setZoom(14)
+
+          // Fetch junctions near this location
+          const fetchedJunctions = await fetchJunctionsNearLocation(location.lat(), location.lng())
+
+          setJunctions(fetchedJunctions)
+
+          // Clear any existing markers
+          if (map.get("markers")) {
+            map.get("markers").forEach((marker: google.maps.Marker) => marker.setMap(null))
+          }
+
+          const markers: google.maps.Marker[] = []
+
+          // Add markers for each junction
+          fetchedJunctions.forEach((junction) => {
+            const marker = new window.google.maps.Marker({
+              position: { lat: junction.latitude, lng: junction.longitude },
+              map: map,
+              title: junction.name,
+              icon: getMarkerIconByTrafficLevel(junction.trafficLevel),
+              label: {
+                text: junction.trafficLevel.charAt(0).toUpperCase(),
+                color: "#FFFFFF",
+                fontSize: "10px",
+                fontWeight: "bold",
+              },
+            })
+
+            marker.addListener("click", () => {
+              if (infoWindow) {
+                // Create a div to render our React component into
+                const popupDiv = document.createElement("div")
+                popupDiv.id = `popup-${junction.id}`
+
+                // Set the content of the info window to this div
+                infoWindow.setContent(popupDiv)
+
+                // Open the info window at the marker
+                infoWindow.open(map, marker)
+
+                // Set the selected junction to trigger rendering of the popup content
+                setSelectedJunction(junction)
+
+                // Add event listener for when the info window is closed
+                window.google.maps.event.addListenerOnce(infoWindow, "closeclick", () => {
+                  setSelectedJunction(null)
+                })
+              }
+            })
+
+            markers.push(marker)
+          })
+
+          // Store markers on the map object for later cleanup
+          map.set("markers", markers)
+        } else {
+          console.error("Geocode was not successful for the following reason: " + status)
+        }
+      })
+    } catch (error) {
+      console.error("Error searching location:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Update info window content when selected junction changes
+  useEffect(() => {
+    if (selectedJunction && infoWindow) {
+      const popupDiv = document.getElementById(`popup-${selectedJunction.id}`)
+      if (popupDiv) {
+        // Use ReactDOM to render our component into the div
+        const root = document.createElement("div")
+        root.className = "junction-popup-container"
+        popupDiv.appendChild(root)
+
+        // Create a new div for the popup content
+        const popupContent = document.createElement("div")
+        popupContent.innerHTML = `
+          <div class="p-2 max-w-[300px]">
+            <div class="font-bold text-lg">${selectedJunction.name}</div>
+            <div class="text-sm mb-2">Junction ID: ${selectedJunction.id}</div>
+            
+            <div class="flex items-center space-x-2 mb-2">
+              <div class="h-3 w-3 rounded-full ${getTrafficLevelClass(selectedJunction.trafficLevel)}"></div>
+              <span>${selectedJunction.trafficLevel.charAt(0).toUpperCase() + selectedJunction.trafficLevel.slice(1)} Traffic</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2 mb-3">
+              <div class="bg-muted/50 p-2 rounded-md">
+                <p class="text-xs text-muted-foreground">Current Traffic</p>
+                <p class="font-bold">${selectedJunction.currentTrafficCount} vehicles</p>
+              </div>
+              <div class="bg-muted/50 p-2 rounded-md">
+                <p class="text-xs text-muted-foreground">Capacity</p>
+                <p class="font-bold">${selectedJunction.capacity} vehicles</p>
+              </div>
+            </div>
+            
+            <button id="view-details-btn-${selectedJunction.id}" class="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-1.5 px-3 rounded-md text-sm">
+              View Details
+            </button>
+          </div>
+        `
+        root.appendChild(popupContent)
+
+        // Add event listener to the button
+        const viewDetailsBtn = document.getElementById(`view-details-btn-${selectedJunction.id}`)
+        if (viewDetailsBtn) {
+          viewDetailsBtn.addEventListener("click", () => {
+            window.location.href = `/simulate/${selectedJunction.id}`
+          })
+        }
+
+        // Adjust the info window size
+        infoWindow.setOptions({ maxWidth: 320 })
+      }
+    }
+  }, [selectedJunction, infoWindow])
+
+  const getMarkerIconByTrafficLevel = (level: string) => {
+    // Create custom SVG markers with different colors based on traffic level
+    const color = level.toLowerCase() === "high" ? "#ef4444" : level.toLowerCase() === "medium" ? "#f59e0b" : "#10b981"
+
+    // Create an SVG traffic light icon with the appropriate color
+    const svgMarker = {
+      path: "M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z",
+      fillColor: color,
+      fillOpacity: 1,
+      strokeWeight: 1,
+      strokeColor: "#FFFFFF",
+      scale: 1.5,
+      labelOrigin: new window.google.maps.Point(0, -30),
+    }
+
+    return svgMarker
+  }
+
+  const getTrafficLevelClass = (level: string) => {
+    switch (level.toLowerCase()) {
+      case "high":
+        return "bg-red-500"
+      case "medium":
+        return "bg-yellow-500"
+      case "low":
+        return "bg-green-500"
+      default:
+        return "bg-blue-500"
+    }
+  }
+
+  return (
+    <div className="relative h-[calc(100vh-64px)]">
+      {/* Search bar */}
+      <div className="absolute top-4 left-0 right-0 z-10 mx-auto w-full max-w-md px-4">
+        <div className="flex items-center space-x-2">
+          <div className="relative flex-1">
+            <Input
+              type="text"
+              placeholder="Search for a location..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              className="pr-10 bg-background/90 backdrop-blur-sm"
+            />
+            {loading && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            )}
+          </div>
+          <Button onClick={handleSearch} disabled={loading}>
+            <Search className="h-4 w-4 mr-2" />
+            Search
+          </Button>
+        </div>
+      </div>
+
+      {/* Map Legend */}
+      <div className="absolute bottom-4 left-4 z-10 bg-background/90 backdrop-blur-sm p-2 rounded-md shadow-md">
+        <div className="text-sm font-medium mb-1">Traffic Status</div>
+        <div className="flex flex-col space-y-1">
+          <div className="flex items-center">
+            <div className="h-3 w-3 rounded-full bg-red-500 mr-2"></div>
+            <span className="text-xs">High Traffic</span>
+          </div>
+          <div className="flex items-center">
+            <div className="h-3 w-3 rounded-full bg-yellow-500 mr-2"></div>
+            <span className="text-xs">Medium Traffic</span>
+          </div>
+          <div className="flex items-center">
+            <div className="h-3 w-3 rounded-full bg-green-500 mr-2"></div>
+            <span className="text-xs">Low Traffic</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Map */}
+      <div ref={mapRef} className="h-full w-full" />
+
+      {/* Hidden div for popup rendering */}
+      <div ref={popupRef} className="hidden" />
+    </div>
+  )
+}
